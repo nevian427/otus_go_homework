@@ -21,7 +21,7 @@ func TestUnpack(t *testing.T) {
 		{input: `qwe\45`, expected: `qwe44444`},
 		{input: `qwe\\5`, expected: `qwe\\\\\`},
 		{input: `qwe\\\3`, expected: `qwe\3`},
-		// new case: repeat escaped digit after escaped \
+		// new case: repeat escaped digit after escaped '\'
 		{input: `qwe\\\33`, expected: `qwe\333`},
 	}
 
@@ -36,7 +36,7 @@ func TestUnpack(t *testing.T) {
 }
 
 func TestUnpackInvalidString(t *testing.T) {
-	//new cases: to many digits after escaping, unfinished escaping
+	// new cases: to many digits after escaping, unfinished escaping
 	invalidStrings := []string{"3abc", "45", "aaa10b", `qwe\\\333`, `qwe\\\3\`}
 	for _, tc := range invalidStrings {
 		tc := tc

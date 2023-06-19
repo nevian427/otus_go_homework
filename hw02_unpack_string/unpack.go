@@ -21,7 +21,7 @@ func Unpack(str string) (string, error) {
 
 	var (
 		res   strings.Builder
-		runes []rune = []rune(str)
+		runes = []rune(str)
 		state int
 	)
 
@@ -49,10 +49,9 @@ func Unpack(str string) (string, error) {
 				count, err := strconv.Atoi(string(runes[i]))
 				if err != nil {
 					return "", ErrInvalidString
-				} else {
-					res.WriteString(strings.Repeat(string(runes[i-1]), count))
-					state = stateNone
 				}
+				res.WriteString(strings.Repeat(string(runes[i-1]), count))
+				state = stateNone
 			case runes[i] == '\\':
 				state = stateEsc
 				res.WriteRune(runes[i-1])
