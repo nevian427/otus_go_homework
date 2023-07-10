@@ -7,12 +7,12 @@ import (
 )
 
 var (
-	clr_spec_chr = regexp.MustCompile(`[!?;:,.'"*+<>=#%&/(){}~|\[\]\\]`)
-	clr_dash     = regexp.MustCompile(`\s-\s`)
+	clrSpecChr = regexp.MustCompile(`[!?;:,.'"*+<>=#%&/(){}~|\[\]\\]`)
+	clrDash    = regexp.MustCompile(`\s-\s`)
 )
 
 func Top10(t string) []string {
-	t = clr_dash.ReplaceAllLiteralString(clr_spec_chr.ReplaceAllLiteralString(strings.ToLower(t), " "), "")
+	t = clrDash.ReplaceAllLiteralString(clrSpecChr.ReplaceAllLiteralString(strings.ToLower(t), " "), "")
 
 	freq := make(map[string]int)
 	words := strings.Fields(t)
