@@ -13,7 +13,9 @@ var (
 )
 
 func Top10(t string) []string {
-	t = clearSingleDash.ReplaceAllLiteralString(clearSpecialCharEnding.ReplaceAllLiteralString(clearSpecialCharBeginning.ReplaceAllLiteralString(strings.ToLower(t), " "), " "), "")
+	t = clearSpecialCharBeginning.ReplaceAllLiteralString(strings.ToLower(t), " ")
+	t = clearSpecialCharEnding.ReplaceAllLiteralString(t, " ")
+	t = clearSingleDash.ReplaceAllLiteralString(t, "")
 
 	words := strings.Fields(t)
 	freq := make(map[string]int, len(words))
