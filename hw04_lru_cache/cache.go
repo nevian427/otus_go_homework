@@ -33,6 +33,7 @@ func NewCache(capacity uint64) Cache {
 func (c *lruCache) Set(key Key, value interface{}) bool {
 	c.mu.Lock()
 	defer c.mu.Unlock()
+
 	if item, ok := c.items[key]; ok {
 		item.Value = cacheItem{
 			key:   key,
@@ -41,12 +42,16 @@ func (c *lruCache) Set(key Key, value interface{}) bool {
 		c.queue.MoveToFront(item)
 		return true
 	}
+
 	if c.queue.Len() == c.capacity {
 		if toRemove := c.queue.Back(); toRemove != nil {
-			delete(c.items, toRemove.Value.(cacheItem).key)
+			if removeItem, ok := toRemove.Value.(cacheItem); ok {
+				delete(c.items, removeItem.key)
+			}
 			c.queue.Remove(toRemove)
 		}
 	}
+
 	c.items[key] = c.queue.PushFront(cacheItem{
 		key:   key,
 		value: value,
@@ -59,7 +64,9 @@ func (c *lruCache) Get(key Key) (interface{}, bool) {
 	defer c.mu.Unlock()
 	if item, ok := c.items[key]; ok {
 		c.queue.MoveToFront(item)
-		return item.Value.(cacheItem).value, true
+		if value, ok := item.Value.(cacheItem); ok {
+			return value.value, true
+		}
 	}
 	return nil, false
 }
