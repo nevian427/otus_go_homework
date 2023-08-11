@@ -5,12 +5,19 @@ import (
 	"sync"
 )
 
-var ErrErrorsLimitExceeded = errors.New("errors limit exceeded")
+var (
+	ErrErrorsLimitExceeded = errors.New("errors limit exceeded")
+	ErrNoWorkers           = errors.New("workers count must be 1 at least")
+)
 
 type Task func() error
 
 // Run starts tasks in n goroutines and stops its work when receiving m errors from tasks.
 func Run(tasks []Task, n, m int) error {
+	if n < 1 {
+		return ErrNoWorkers
+	}
+
 	var (
 		wg       sync.WaitGroup
 		errCount int64
