@@ -44,24 +44,26 @@ func Copy(fromPath, toPath string, offset, limit int64) error {
 		limit = inInfo.Size()
 	}
 
-	absoffset := offset
 	if offset != 0 {
+		absoffset := offset
 		whence := io.SeekStart
-		if offset < 0 {
+		switch { // такой вот извращённый обход линтера, ругающегося на вложенные IF - кажется было бы понятнее с ними
+		case offset < 0:
 			whence = io.SeekEnd
 			absoffset = -offset
 
 			if limit > absoffset {
 				limit = absoffset
 			}
-		}
+			fallthrough
+		default:
+			if inInfo.Mode().IsRegular() && inInfo.Size() < absoffset {
+				return ErrOffsetExceedsFileSize
+			}
 
-		if inInfo.Mode().IsRegular() && inInfo.Size() < absoffset {
-			return ErrOffsetExceedsFileSize
-		}
-
-		if _, err := inFile.Seek(offset, whence); err != nil {
-			return err
+			if _, err := inFile.Seek(offset, whence); err != nil {
+				return err
+			}
 		}
 	}
 
