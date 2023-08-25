@@ -2,7 +2,6 @@ package main
 
 import (
 	"crypto/rand"
-	"fmt"
 	mrand "math/rand"
 	"os"
 	"testing"
@@ -101,7 +100,6 @@ func TestCopyRegular(t *testing.T) {
 	t.Run("rand negative offset and rand limit", func(t *testing.T) {
 		limit := mrand.Int63n(testdataSize)
 		offset := -mrand.Int63n(testdataSize)
-		fmt.Printf("\nlimit: %d, offset: %d\n", limit, offset)
 
 		err := Copy(testfile.Name(), "testfile_copy", offset, limit)
 		require.NoErrorf(t, err, "Copy func error: %s", err)
